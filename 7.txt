@@ -1,13 +1,16 @@
 (a) Polimorfismo via overloading de operadores e polimorfismo paramétrico pois 
 usa uma classe genérica T
-(b) Nenhum leak?
-(c) ??? Em C++ o destrutor seria chamado. Em Java não tem destrutor, como saber 
-se eles é chamado. Em Python, o destrutor é chamado pelo garbage collector bem 
-depois.
 
-https://bytes.com/topic/python/answers/32106-destructors-exceptions
+(b) O programa apresentado não possui nenhum problema de memória, verificado e 
+confirmado pelo valgrind. Isso se deve ao fato de que, quando o objeto auto_ptr,
+quando sai do escopo, tem seu destrutor chamado e este libera a memória do 
+ponteiro que ele gerencia.
 
+(c) Em C++ o destrutor seria chamado, mesmo após o throw. Em Python, o destrutor
+também é chamado pelo garbage collector após um raise. Desse modo, o programa
+não apresenta problemas de memória, pois o destrutor de auto_ptr é chamado e ele 
+libera a memória do heap.
 
-(d) Memory eak, o ponteiro fica apontando E não é desalocado 
-
-Rodar o valgrind nas últimas três 
+(d) Esse programa apresenta um problema de memória. Como não se utiliza, por 
+exemplo, o auto_ptr, quando o throw é acionado, não há quem libere a memória
+alocada para o ponteiro de string. 
