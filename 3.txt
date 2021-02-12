@@ -1,0 +1,4 @@
+valor_inicial: estática 
+valor_intermediario: estática 
+valores: dinâmica - heap
+taxa: dinâmica - stack

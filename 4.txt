@@ -1,0 +1,7 @@
+Como visto em aula, temos três exemplos de garbage collection: mark and sweep, 
+copying collector e reference counting. Por exemplo, numa aplicação de um 
+sistema embarcado, o mark and sweep pode ser mais recomendado, visto que não 
+exige armazenar estruturas adicionais como o reference counting e nem faz 
+escritas desnecessárias na memória como o copying collector. Como sistemas 
+embarcados normalmente não possuem uma vasta memória, a desvantagem da extensa 
+análise de memória não é tão grande

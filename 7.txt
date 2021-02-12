@@ -1,0 +1,13 @@
+(a) Polimorfismo via overloading de operadores e polimorfismo paramétrico pois 
+usa uma classe genérica T
+(b) Nenhum leak?
+(c) ??? Em C++ o destrutor seria chamado. Em Java não tem destrutor, como saber 
+se eles é chamado. Em Python, o destrutor é chamado pelo garbage collector bem 
+depois.
+
+https://bytes.com/topic/python/answers/32106-destructors-exceptions
+
+
+(d) Memory eak, o ponteiro fica apontando E não é desalocado 
+
+Rodar o valgrind nas últimas três 
