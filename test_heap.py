@@ -1,5 +1,6 @@
 import pytest
 from heap import HeapManager, NULL
+from filecmp import cmp
 
 class TestAllocation:
     def setup_method(self):
@@ -101,3 +102,7 @@ class TestDeallocBasic:
         self.h.deallocate(a)
         assert self.h.freeStart == 0
         assert self.h.memory[0] == 10
+    
+class TestArquivosIguais:
+    def test_compara(self):
+        assert cmp('heap.py','5.py',shallow=True)
