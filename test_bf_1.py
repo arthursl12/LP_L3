@@ -16,7 +16,7 @@ class TestDealloc1:
         assert self.h.memory[8] == 2
         assert self.h.memory[9] == -1
         
-        c = self.h.allocate (1)
+        c1 = self.h.allocate (1)
         assert self.h.freeStart == NULL
         
         self.h.deallocate(a)
@@ -35,7 +35,7 @@ class TestDealloc1:
         assert self.h.memory[0] == 5
         assert self.h.memory[1] == -1
         
-        self.h.deallocate(c)
+        self.h.deallocate(c1)
         assert self.h.freeStart == 0
         assert self.h.memory[0] == 5
         assert self.h.memory[1] == 8
@@ -45,11 +45,29 @@ class TestDealloc1:
         for i in range(5,10):
             with pytest.raises(Exception) as e_info:
                 self.h.allocate(i)
+        c = self.h.allocate(1)
+        assert c == c1
+        assert self.h.freeStart == 0
+        assert self.h.memory[0] == 5
+        self.h.deallocate(c)
         
+        c2 = self.h.allocate(2)
+        assert c2 != c
+        assert self.h.freeStart == 3
+        assert self.h.memory[3] == 2
+        assert self.h.memory[4] == 8
+        assert self.h.memory[8] == 2
+        assert self.h.memory[9] == -1
+        self.h.deallocate(c2)
+        assert self.h.freeStart == 0
+        assert self.h.memory[0] == 5
+        assert self.h.memory[1] == 8
+        assert self.h.memory[8] == 2
+        assert self.h.memory[9] == -1
+
         self.h.deallocate(b)
         assert self.h.freeStart == 0
         assert self.h.memory[0] == 10
-        assert self.h.memory[1] == -1
         
         d = self.h.allocate(9)
         assert self.h.freeStart == NULL
@@ -70,10 +88,22 @@ class TestDealloc1:
         assert self.h.memory[4] == 2
         assert self.h.memory[5] == -1
         
+        
         self.h.deallocate(1)
         for i in range(2,10):
             with pytest.raises(Exception) as e_info:
                 self.h.allocate(i)
+        assert self.h.freeStart == 0
+        assert self.h.memory[0] == 2
+        assert self.h.memory[1] == 4
+        assert self.h.memory[4] == 2
+        assert self.h.memory[5] == -1
+        
+        c = self.h.allocate(1)
+        assert self.h.freeStart == 4
+        assert self.h.memory[4] == 2
+        assert self.h.memory[5] == -1
+        self.h.deallocate(c)
         assert self.h.freeStart == 0
         assert self.h.memory[0] == 2
         assert self.h.memory[1] == 4
@@ -88,31 +118,25 @@ class TestDealloc1:
                 self.h.allocate(i)
         assert self.h.freeStart == 0
         assert self.h.memory[0] == 6
-        assert self.h.memory[1] == -1
         
         t = self.h.allocate(5)
         assert self.h.freeStart == NULL
         self.h.deallocate(t)
         assert self.h.freeStart == 0
         assert self.h.memory[0] == 6
-        assert self.h.memory[1] == -1
         
         t = self.h.allocate(4)
         assert self.h.freeStart == NULL
         self.h.deallocate(t)
         assert self.h.freeStart == 0
         assert self.h.memory[0] == 6
-        assert self.h.memory[1] == -1
         
         t = self.h.allocate(3)
         assert self.h.freeStart == 4
         assert self.h.memory[4] == 2
-        assert self.h.memory[5] == -1
-        
         self.h.deallocate(t)
         assert self.h.freeStart == 0
         assert self.h.memory[0] == 6
-        assert self.h.memory[1] == -1
         
         self.h.deallocate(9)
         # assert self.h.memory == [6,-1,0,0,0,0,2,-1,2,-1]
@@ -124,30 +148,23 @@ class TestDealloc1:
         assert self.h.memory[0] == 6
         assert self.h.memory[1] == 8
         assert self.h.memory[8] == 2
-        assert self.h.memory[9] == -1
         
         t = self.h.allocate(1)
-        assert self.h.freeStart == 2
-        assert self.h.memory[2] == 4
-        assert self.h.memory[3] == 8
-        assert self.h.memory[8] == 2
-        assert self.h.memory[9] == -1
-        
+        assert self.h.freeStart == 0
+        assert self.h.memory[0] == 6
+        assert self.h.memory[1] == -1
         self.h.deallocate(t)
         assert self.h.freeStart == 0
         assert self.h.memory[0] == 6
         assert self.h.memory[1] == 8
         assert self.h.memory[8] == 2
-        assert self.h.memory[9] == -1
         
         self.h.deallocate(7)
         assert self.h.freeStart == 0
         assert self.h.memory[0] == 10
-        assert self.h.memory[1] == -1
         
         c = self.h.allocate(9)
         assert self.h.freeStart == NULL
         self.h.deallocate(c)
         assert self.h.freeStart == 0
         assert self.h.memory[0] == 10
-        assert self.h.memory[1] == -1

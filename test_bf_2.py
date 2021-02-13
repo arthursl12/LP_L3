@@ -56,7 +56,20 @@ class TestDealloc2:
         assert self.h.memory[5] == 8
         assert self.h.memory[8] == 2
         assert self.h.memory[9] == -1
+        
+        c1 = self.h.allocate(1)
+        assert self.h.freeStart == 8
+        assert self.h.memory[8] == 2
+        assert self.h.memory[9] == -1
+        
         self.h.deallocate(c)
+        assert self.h.freeStart == 0
+        assert self.h.memory[0] == 2
+        assert self.h.memory[1] == 8
+        assert self.h.memory[8] == 2
+        assert self.h.memory[9] == -1
+        
+        self.h.deallocate(c1)
         assert self.h.freeStart == 0
         assert self.h.memory[0] == 2
         assert self.h.memory[1] == 4
