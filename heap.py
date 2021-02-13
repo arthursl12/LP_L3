@@ -6,9 +6,14 @@ class  HeapManager:
         """ Constructor. Parameter  initialMemory  is the  array of
         data  that we will use to  represent  the  memory."""
         self.memory = initialMemory
-        self.memory [0] = self.memory.__len__()
-        self.memory [1] = NULL
+        self.memory[0] = self.memory.__len__()
+        self.memory[1] = NULL
         self.freeStart = 0
+    
+    def findBlock(self,idx):
+        for block in self.freePairs:
+            if (idx == block[1]):
+                return block
     
     def  allocate(self , requestSize):
         """ Allocates a block of data , and  return  its  address. Theparameter
@@ -24,15 +29,16 @@ class  HeapManager:
         if p == NULL:
             raise  MemoryError ()
         nextFree = self.memory[p + 1]
-        # Now p is the  index of a block  of  sufficient  size ,
-        # lag is the  index of p’s predecessor  in the
-        # free list , or NULL , and  nextFree  is the  index  of
-        # p’s successor  in the  free list , or NULL.
-        # If the  block  has  more  space  than we need , carve
-        # out  what we need  from  the  front  and  return  the
-        # unused  end  part to the  free  list.
+        
+        # Now:
+        # p is the index of a block of sufficient size,
+        # lag is the index of p’s predecessor in the free list, or NULL,
+        # nextFree is the index of p’s successor in the free list, or NULL.
+        
+        # If the block has more space than we need, carve out what we need from 
+        # the front and return the unused end part to the free list.
         unused = self.memory[p] - size
-        if  unused  > 1:
+        if  unused > 1:
             # Se tiver mais de uma posição livre
             nextFree = p + size
             self.memory[nextFree] = unused
@@ -43,12 +49,63 @@ class  HeapManager:
         else:
             self.memory[lag + 1] = nextFree
         return p + 1
-    def deallocate(addr):
-        """
-        
-        """
-        pass
     
+    def deallocate(self, addr):
+        """
+        Desaloca um bloco com endereço 'addr'. Esse endereço precisa ter sido
+        fornecido pelo método 'allocate' e esse bloco não pode ter sido 
+        desalocado previamente.
+        
+        Adaptado do método 'desallocate' do livro
+	    """
+        blockSize = addr - 1        # O tamanho real está no índice anterior
+        realAddr = addr - 1         # O bloco começa de fato no índice anterior
+     
+        # Procura onde colocar ele na lista de blocos vazios
+        p = self.freeStart
+        lag = NULL
+        while (p != NULL  and  p < realAddr):
+            lag = p
+            p = self.memory[p + 1]
+
+		# // Find the insertion point in the sorted free list for this block.
+		# int p = freeStart;
+		# int lag = NULL;
+		# while (p!=NULL && p<addr) {
+		# 	lag = p;
+		# 	p = memory[p+1];
+		# }
+
+        # Agora:
+        # p: índice do bloco logo após o que queremos desalocar, ou NULL
+        # lag: índice do bloco que vem antes do nosso na lista livre, ou NULL
+        
+		# // Now p is the index of the block to come after ours in the free list, or NULL, and lag is the
+		# // index of the block to come before ours in the free list, or NULL.
+
+		# If the one to come after ours is adjacent to it, merge it into ours and restore the property
+		# described above.
+
+        if (realAddr + self.memory[realAddr] == p):
+            # Adicionar bloco à frente ao atual (que queremos desalocar) 
+            self.memory[realAddr] = self.memory[realAddr] + self.memory[p]  # Soma os tamanhos
+            p = self.memory[p+1]        # p := 0?
+
+        if (lag == NULL):
+            # Esse bloco recém-desalocado (junto com o da frente) 
+            # é o primeiro livre
+            self.freeStart = realAddr
+            self.memory[realAddr+1] = p     # p = -1?
+        else:
+            if (lag + self.memory[lag] == realAddr):
+                # Bloco livre anterior é adjacente, temos que fundi-lo também
+                self.memory[lag] = self.memory[lag] + self.memory[realAddr] # Soma os tamanhos
+                self.memory[lag+1] = p      # p = -1?
+            else:
+                # Nenhuma das opções, só uma inserção simples na lista de livres
+                self.memory[lag+1] = realAddr
+                self.memory[realAddr+1] = p     # p = -1?
+
 """
 Bloco ocupa n+1 posições: a primeira diz o tamanho do bloco
 Bloco mínimo (1) ocupa 2 posições, por isso na hora de marcar o próximo bloco
@@ -61,7 +118,12 @@ def  test():
     print("a = ", a, ", Memory = ", h.memory)
     b = h.allocate (2)
     
-    # b = h.allocate (2)
-    print("b = ", b, ", Memory = ", h.memory)
+    h.deallocate(a)
+    print("Memory = ", h.memory)
+    h.deallocate(b)
+    print("Memory = ", h.memory)
+    
+    c = h.allocate (7)
+    print("Memory = ", h.memory)
     
 test()
