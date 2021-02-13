@@ -1,5 +1,5 @@
 import pytest
-from heap import HeapManager, NULL
+from heap_best import HeapManager, NULL
 
 class TestDealloc2:
     def setup_method(self):

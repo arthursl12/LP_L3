@@ -105,4 +105,4 @@ class TestDeallocBasic:
     
 class TestArquivosIguais:
     def test_compara(self):
-        assert cmp('heap.py','5.py',shallow=True)
+        assert cmp('heap_best.py','6.py',shallow=True)

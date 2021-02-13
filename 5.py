@@ -16,8 +16,8 @@ class  HeapManager:
                 return block
     
     def  allocate(self , requestSize):
-        """ Allocates a block of data , and  return  its  address. Theparameter
-        requestSize  is the  amount  of space  that  must be  allocaed."""
+        """ Allocates a block of data, and return its address. The parameter
+        requestSize is the amount of space that must be allocated."""
         size = requestSize + 1
         
         # Do first-fit  search: linear  search  of the  free  list  for
