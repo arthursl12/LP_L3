@@ -81,7 +81,7 @@ class  HeapManager:
         fornecido pelo método 'allocate' e esse bloco não pode ter sido 
         desalocado previamente.
         
-        Adaptado do método 'desallocate' do livro
+        Adaptado do método 'deallocate' do livro
 	    """
         blockSize = addr - 1        # O tamanho real está no índice anterior
         realAddr = addr - 1         # O bloco começa de fato no índice anterior
